@@ -41,7 +41,7 @@ export default function GlobalSearch({ isOpen, onClose }: GlobalSearchProps) {
     });
 
     // Recherche dans les devis
-    (quotes || []).forEach(quote => {
+    quotes.forEach(quote => {
       if (
         quote.number.toLowerCase().includes(term) ||
         quote.client.name.toLowerCase().includes(term)
@@ -97,7 +97,7 @@ export default function GlobalSearch({ isOpen, onClose }: GlobalSearchProps) {
     });
 
     return results.slice(0, 8); // Limiter à 8 résultats
-  }, [searchTerm, invoices, clients, products, quotes || [], navigate]);
+  }, [searchTerm, invoices, clients, products, quotes, navigate]);
 
   // Navigation au clavier
   useEffect(() => {

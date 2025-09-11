@@ -178,7 +178,7 @@ export default function Sidebar({ open, setOpen, onUpgrade }: SidebarProps) {
     <div
       className={`fixed inset-y-0 left-0 z-50 bg-white shadow-xl transform transition-all duration-300 ease-in-out ${
         open ? 'w-64 translate-x-0' : 'w-16 translate-x-0'
-      } dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700`}
+      } dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 transition-colors duration-200`}
     >
       {/* Header */}
       <div className={`flex items-center justify-between h-16 ${open ? 'px-6' : 'px-3'} border-b border-gray-200 dark:border-gray-700`}>

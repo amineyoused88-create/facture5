@@ -37,6 +37,9 @@ export default {
       backdropBlur: {
         xs: '2px',
       },
+      transitionProperty: {
+        'colors': 'color, background-color, border-color, text-decoration-color, fill, stroke',
+      },
     },
   },
   plugins: [],

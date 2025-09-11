@@ -136,7 +136,7 @@ function AppContent() {
     );
   }
   return (
-    <>
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-200">
       {/* Notification d'expiration proche - FIXE AU-DESSUS DE TOUT */}
       {showExpirationNotification && subscriptionStatus.shouldShowNotification && (
         <div className="fixed top-0 left-0 right-0 z-[100]">
@@ -148,7 +148,7 @@ function AppContent() {
         </div>
       )}
       
-    <div className={`min-h-screen bg-gray-50 flex ${showExpirationNotification && subscriptionStatus.shouldShowNotification ? 'pt-16' : ''}`}>
+    <div className={`min-h-screen bg-gray-50 dark:bg-gray-900 flex transition-colors duration-200 ${showExpirationNotification && subscriptionStatus.shouldShowNotification ? 'pt-16' : ''}`}>
       <LicenseAlert onUpgrade={() => setShowUpgradePage(true)} />
       <Sidebar 
         open={sidebarOpen} 
@@ -162,7 +162,7 @@ function AppContent() {
           onOpenSearch={() => setShowGlobalSearch(true)}
           onOpenNotifications={() => setShowNotifications(true)}
         />
-        <main className="p-6">
+        <main className="p-6 bg-gray-50 dark:bg-gray-900 transition-colors duration-200">
           <Routes>
             <Route path="/" element={<Dashboard />} />
             <Route path="/dashboard" element={<Dashboard />} />
@@ -248,7 +248,7 @@ function AppContent() {
         />
       )}
     </div>
-    </>
+    </div>
   );
 }
 

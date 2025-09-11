@@ -48,9 +48,9 @@ export default function HomePage() {
 
   return (
     // ⬇ Wrapper sticky footer
-    <div className="flex min-h-screen flex-col bg-white">
+    <div className="flex min-h-screen flex-col bg-white dark:bg-gray-900 transition-colors duration-200">
       {/* Header FIXE */}
-      <header className="fixed top-0 inset-x-0 z-50 bg-white/85 backdrop-blur-md shadow-sm border-b border-gray-200">
+      <header className="fixed top-0 inset-x-0 z-50 bg-white/85 dark:bg-gray-900/85 backdrop-blur-md shadow-sm border-b border-gray-200 dark:border-gray-700 transition-colors duration-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center space-x-3">
@@ -58,18 +58,18 @@ export default function HomePage() {
                 <Building2 className="w-6 h-6 text-white" />
               </div>
               <div>
-                <h1 className="text-xl font-bold text-gray-900">Facture.ma</h1>
-                <p className="text-xs text-gray-500">ERP Morocco</p>
+                <h1 className="text-xl font-bold text-gray-900 dark:text-white">Facture.ma</h1>
+                <p className="text-xs text-gray-500 dark:text-gray-400">ERP Morocco</p>
               </div>
             </div>
 
             <nav className="hidden md:flex items-center space-x-8">
-              <a href="#accueil" className="text-gray-800 hover:text-teal-600 font-medium">Accueil</a>
-              <a href="#secteurs" className="text-gray-800 hover:text-teal-600 font-medium">Secteurs</a>
-              <a href="#modules" className="text-gray-800 hover:text-teal-600 font-medium">Modules</a>
-              <a href="#tarifs" className="text-gray-800 hover:text-teal-600 font-medium">Tarifs</a>
-              <a href="#faq" className="text-gray-800 hover:text-teal-600 font-medium">FAQ</a>
-              <Link to="/login" className="text-gray-800 hover:text-teal-600 font-medium">Connexion</Link>
+              <a href="#accueil" className="text-gray-800 dark:text-gray-200 hover:text-teal-600 dark:hover:text-teal-400 font-medium transition-colors">Accueil</a>
+              <a href="#secteurs" className="text-gray-800 dark:text-gray-200 hover:text-teal-600 dark:hover:text-teal-400 font-medium transition-colors">Secteurs</a>
+              <a href="#modules" className="text-gray-800 dark:text-gray-200 hover:text-teal-600 dark:hover:text-teal-400 font-medium transition-colors">Modules</a>
+              <a href="#tarifs" className="text-gray-800 dark:text-gray-200 hover:text-teal-600 dark:hover:text-teal-400 font-medium transition-colors">Tarifs</a>
+              <a href="#faq" className="text-gray-800 dark:text-gray-200 hover:text-teal-600 dark:hover:text-teal-400 font-medium transition-colors">FAQ</a>
+              <Link to="/login" className="text-gray-800 dark:text-gray-200 hover:text-teal-600 dark:hover:text-teal-400 font-medium transition-colors">Connexion</Link>
             </nav>
 
             <Link

@@ -1,171 +1,148 @@
-import React from 'react';
-import { useAuth } from '../../contexts/AuthContext';
-import { useLanguage } from '../../contexts/LanguageContext';
-import { useTheme } from '../../contexts/ThemeContext';
-import { Bell, Search, User, LogOut, Menu, Moon, Sun, Command } from 'lucide-react';
+import React, { useState } from 'react';
+import { useData } from '../../contexts/DataContext';
+import { useLicense } from '../../contexts/LicenseContext';
+import Modal from '../common/Modal';
 
-interface HeaderProps {
-  sidebarOpen: boolean;
-  setSidebarOpen: (open: boolean) => void;
-  onOpenSearch: () => void;
-  onOpenNotifications: () => void;
+interface AddClientModalProps {
+  isOpen: boolean;
+  onClose: () => void;
 }
 
-export default function Header({ sidebarOpen, setSidebarOpen, onOpenSearch, onOpenNotifications }: HeaderProps) {
-  const { user, logout } = useAuth();
-  const { language, setLanguage } = useLanguage();
-  const { theme, toggleTheme, isDark } = useTheme();
-  
-  const handleLogout = async () => {
-    try {
-      await logout();
-    } catch (error) {
-      console.error('Erreur lors de la déconnexion:', error);
+export default function AddClientModal({ isOpen, onClose }: AddClientModalProps) {
+  const { addClient } = useData();
+  const { checkLimit } = useLicense();
+  const [formData, setFormData] = useState({
+    name: '',
+    ice: '',
+    address: '',
+    phone: '',
+    email: ''
+  });
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!checkLimit('clients')) {
+      alert('🚨 Vous avez atteint la limite de clients de la version gratuite. Passez à la version Pro pour continuer.');
+      return;
     }
+    
+    if (!formData.name || !formData.ice) {
+      alert('Le nom et l\'ICE sont obligatoires');
+      return;
+    }
+    
+    addClient(formData);
+    setFormData({
+      name: '',
+      ice: '',
+      address: '',
+      phone: '',
+      email: ''
+    });
+    onClose();
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value
+    });
   };
 
   return (
-    <header className="bg-white dark:bg-gray-900 shadow-sm border-b border-gray-200 dark:border-gray-700 sticky top-0 z-40">
-      <div className="flex items-center justify-between px-6 py-4">
-        <div className="flex items-center space-x-4">
-          <button
-            onClick={() => setSidebarOpen(!sidebarOpen)}
-            className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors lg:hidden"
-          >
-            <Menu className="w-5 h-5 text-gray-600 dark:text-gray-300" />
-          </button>
-        </div>
-
-        <div className="flex items-center space-x-4">
-          {/* Barre de recherche globale */}
-          <button
-            onClick={onOpenSearch}
-            className="hidden md:flex items-center space-x-3 px-4 py-2 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-lg transition-all duration-200 min-w-80"
-          >
-            <Search className="w-4 h-4 text-gray-500 dark:text-gray-400" />
-            <span className="text-sm text-gray-500 dark:text-gray-400">Rechercher facture, devis, client, produit...</span>
-            <div className="ml-auto flex items-center space-x-1">
-              <kbd className="px-1.5 py-0.5 text-xs bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300 rounded">⌘</kbd>
-              <kbd className="px-1.5 py-0.5 text-xs bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300 rounded">K</kbd>
-            </div>
-          </button>
-
-          {/* Bouton recherche mobile */}
-          <button
-            onClick={onOpenSearch}
-            className="md:hidden p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
-          >
-            <Search className="w-5 h-5 text-gray-600 dark:text-gray-300" />
-          </button>
-
-          {/* Language Toggle */}
-          <div className="flex bg-gray-100 dark:bg-gray-700 rounded-lg p-1">
-            <button
-              onClick={() => setLanguage('fr')}
-              className={`px-2 py-1 rounded text-sm font-medium transition-colors ${
-                language === 'fr' 
-                  ? 'bg-white dark:bg-gray-600 text-teal-600 dark:text-teal-400 shadow-sm' 
-                  : 'text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white'
-              }`}
-            >
-              FR
-            </button>
+    <Modal isOpen={isOpen} onClose={onClose} title="Nouveau Client" size="lg">
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="md:col-span-2">
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Nom/Raison sociale *
+            </label>
+            <input
+              type="text"
+              name="name"
+              value={formData.name}
+              onChange={handleChange}
+              required
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+              placeholder="Nom du client ou raison sociale"
+            />
           </div>
-
-          {/* Toggle thème */}
-          <button
-            onClick={toggleTheme}
-            className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
-            title={isDark ? 'Mode clair' : 'Mode sombre'}
-          >
-            {isDark ? (
-              <Sun className="w-5 h-5 text-yellow-500" />
-            ) : (
-              <Moon className="w-5 h-5 text-gray-600" />
-            )}
-          </button>
-
-          {/* Centre de notifications */}
-          <button
-            onClick={onOpenNotifications}
-            className="relative p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
-          >
-            <Bell className="w-5 h-5 text-gray-600 dark:text-gray-300" />
-            <span className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full animate-pulse"></span>
-          </button>
-
-          {/* Company Name */}
-          {user?.company?.name && (
-            <div className="text-lg font-bold text-gray-900 dark:text-white uppercase">
-              {user.company.name}
-              {!user.isAdmin && user.email !== 'admin@facture.ma' && (
-                (() => {
-                  // Vérifier si l'abonnement est expiré
-                  const isExpired = user?.company?.subscription === 'pro' && 
-                    user?.company?.expiryDate && 
-                    new Date(user.company.expiryDate) < new Date();
-                  
-                  return (
-                    <span className={`ml-2 text-xs px-2 py-1 rounded-full ${
-                      isExpired 
-                        ? 'bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-300 animate-pulse' 
-                        : 'bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300'
-                    }`}>
-                      {isExpired ? '🔒 Bloqué' : 'Utilisateur'}
-                    </span>
-                  );
-                })()
-              )}
-              {user.email === 'admin@facture.ma' && (
-                <span className="ml-2 text-xs bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-300 px-2 py-1 rounded-full">
-                  Admin Plateforme
-                </span>
-              )}
-            </div>
-          )}
-
-          {/* User Menu */}
-          <div className="flex items-center space-x-3">
-            <div className="relative group">
-              <button className="flex items-center space-x-2 p-2 text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors">
-                {user?.company.logo ? (
-                  <img 
-                    src={user.company.logo} 
-                    alt="Logo" 
-                    className="w-8 h-8 rounded-full object-cover"
-                  />
-                ) : (
-                  <div className="w-8 h-8 bg-gradient-to-br from-teal-500 to-blue-500 rounded-full flex items-center justify-center">
-                    <User className="w-4 h-4 text-white" />
-                  </div>
-                )}
-              </button>
-              
-              {/* Dropdown Menu */}
-              <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
-                <div className="py-2">
-                  {user && (
-                    <div className="px-4 py-2 border-b border-gray-200 dark:border-gray-700">
-                      <p className="text-sm font-medium text-gray-900 dark:text-white">{user.name}</p>
-                      <p className="text-xs text-gray-500 dark:text-gray-400">
-                        {user.email === 'admin@facture.ma' ? 'Admin Plateforme' : 
-                         user.isAdmin ? 'Administrateur' : 'Utilisateur'}
-                      </p>
-                    </div>
-                  )}
-                  <button
-                    onClick={handleLogout}
-                    className="flex items-center space-x-2 w-full px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
-                  >
-                    <LogOut className="w-4 h-4" />
-                    <span>Déconnexion</span>
-                  </button>
-                </div>
-              </div>
-            </div>
+          
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              ICE *
+            </label>
+            <input
+              type="text"
+              name="ice"
+              value={formData.ice}
+              onChange={handleChange}
+              required
+              maxLength={15}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent"
+              placeholder="001234567000012"
+            />
+          </div>
+          
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Téléphone
+            </label>
+            <input
+              type="text"
+              name="phone"
+              value={formData.phone}
+              onChange={handleChange}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent"
+              placeholder="+212 522 123 456"
+            />
+          </div>
+          
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Email
+            </label>
+            <input
+              type="email"
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent"
+              placeholder="client@email.com"
+            />
+          </div>
+          
+          <div className="md:col-span-2">
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Adresse
+            </label>
+            <textarea
+              name="address"
+              value={formData.address}
+              onChange={handleChange}
+              rows={3}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent"
+              placeholder="Adresse complète du client"
+            />
           </div>
         </div>
-      </div>
-    </header>
-  );
+
+        <div className="flex justify-end space-x-3 pt-6">
+          <button
+            type="button"
+            onClick={onClose}
+            className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+          >
+            Annuler
+          </button>
+          <button
+            type="submit"
+            className="px-4 py-2 bg-gradient-to-r from-teal-600 to-blue-600 hover:from-teal-700 hover:to-blue-700 text-white rounded-lg transition-all duration-200"
+          >
+            Ajouter Client
+          </button>
+        </div>
+      </form>
+    </Modal>
 }
