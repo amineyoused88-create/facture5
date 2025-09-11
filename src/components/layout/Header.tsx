@@ -145,4 +145,5 @@ export default function AddClientModal({ isOpen, onClose }: AddClientModalProps)
         </div>
       </form>
     </Modal>
+  )
 }
