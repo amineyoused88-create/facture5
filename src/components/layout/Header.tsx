@@ -2,7 +2,7 @@ import React from 'react';
 import { useAuth } from '../../contexts/AuthContext';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { useTheme } from '../../contexts/ThemeContext';
-import { Bell, Search, User, LogOut, Globe, Menu, Moon, Sun, Command } from 'lucide-react';
+import { Bell, Search, User, LogOut, Menu, Moon, Sun, Command } from 'lucide-react';
 
 interface HeaderProps {
   sidebarOpen: boolean;
@@ -59,13 +59,13 @@ export default function Header({ sidebarOpen, setSidebarOpen, onOpenSearch, onOp
           </button>
 
           {/* Language Toggle */}
-          <div className="flex bg-gray-100 rounded-lg p-1">
+          <div className="flex bg-gray-100 dark:bg-gray-700 rounded-lg p-1">
             <button
               onClick={() => setLanguage('fr')}
               className={`px-2 py-1 rounded text-sm font-medium transition-colors ${
                 language === 'fr' 
-                  ? 'bg-white text-teal-600 shadow-sm' 
-                  : 'text-gray-600 hover:text-gray-900'
+                  ? 'bg-white dark:bg-gray-600 text-teal-600 dark:text-teal-400 shadow-sm' 
+                  : 'text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white'
               }`}
             >
               FR
@@ -108,8 +108,8 @@ export default function Header({ sidebarOpen, setSidebarOpen, onOpenSearch, onOp
                   return (
                     <span className={`ml-2 text-xs px-2 py-1 rounded-full ${
                       isExpired 
-                        ? 'bg-red-100 text-red-800 animate-pulse' 
-                        : 'bg-blue-100 text-blue-800'
+                        ? 'bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-300 animate-pulse' 
+                        : 'bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300'
                     }`}>
                       {isExpired ? '🔒 Bloqué' : 'Utilisateur'}
                     </span>
@@ -117,7 +117,7 @@ export default function Header({ sidebarOpen, setSidebarOpen, onOpenSearch, onOp
                 })()
               )}
               {user.email === 'admin@facture.ma' && (
-                <span className="ml-2 text-xs bg-red-100 text-red-800 px-2 py-1 rounded-full">
+                <span className="ml-2 text-xs bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-300 px-2 py-1 rounded-full">
                   Admin Plateforme
                 </span>
               )}
