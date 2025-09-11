@@ -11,6 +11,7 @@ interface HeaderProps {
   onOpenNotifications: () => void;
 }
 
+
 export default function Header({ sidebarOpen, setSidebarOpen, onOpenSearch, onOpenNotifications }: HeaderProps) {
   const { user, logout } = useAuth();
   const { language, setLanguage } = useLanguage();
